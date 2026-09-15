@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.res.Configuration
-import com.isx3i.nitrokill.data.PrefsManager
 import com.isx3i.nitrokill.util.LocaleHelper
 
 class NitroKillApp : Application() {
@@ -15,9 +14,19 @@ class NitroKillApp : Application() {
     }
 
     override fun attachBaseContext(base: Context) {
-        // Apply the user's saved language choice before any resources are resolved.
+        /*
+         * IMPORTANT:
+         * Do not access DataStore or use runBlocking here.
+         *
+         * attachBaseContext() runs very early during application startup.
+         * Reading the language from SharedPreferences keeps startup
+         * synchronous, lightweight, and safe.
+         */
         val savedLang = LocaleHelper.readSavedLanguageBlocking(base)
-        super.attachBaseContext(LocaleHelper.wrap(base, savedLang))
+
+        super.attachBaseContext(
+            LocaleHelper.wrap(base, savedLang)
+        )
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -31,14 +40,16 @@ class NitroKillApp : Application() {
 
     private fun createNotificationChannel() {
         val manager = getSystemService(NotificationManager::class.java)
+
         val channel = NotificationChannel(
             SPEED_CHANNEL_ID,
             getString(R.string.notification_channel_name),
-            NotificationManager.IMPORTANCE_LOW // low = no sound, stays visible & silent
+            NotificationManager.IMPORTANCE_LOW
         ).apply {
             description = getString(R.string.notification_channel_desc)
             setShowBadge(false)
         }
+
         manager.createNotificationChannel(channel)
     }
 }
