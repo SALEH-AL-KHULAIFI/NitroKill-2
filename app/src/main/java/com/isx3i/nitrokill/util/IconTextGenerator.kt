@@ -10,7 +10,8 @@ import java.util.Locale
 
 object IconTextGenerator {
 
-    private const val SIZE = 96
+    // تكبير مساحة المؤشر قليلًا
+    private const val SIZE = 115
 
     fun forSpeed(bytesPerSecond: Long): IconCompat {
         val (value, unit) = shortLabel(bytesPerSecond)
@@ -40,44 +41,63 @@ object IconTextGenerator {
 
         val canvas = Canvas(bitmap)
 
+        // ==========================================
         // الرقم الرئيسي
+        // ==========================================
         val numberPaint = Paint(
             Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG
         ).apply {
             color = Color.WHITE
+
+            // خط ضيق حتى نستطيع تكبير الرقم عموديًا
+            // بدون أن يصبح عريضًا جدًا
             typeface = Typeface.create(
                 "sans-serif-condensed",
                 Typeface.BOLD
             )
+
             textAlign = Paint.Align.CENTER
 
-            // تكبير الرقم عموديًا مع الحفاظ على عرضه الضيق
+            // تكبير الرقم بشكل واضح
             textSize = when {
-                value.length >= 4 -> SIZE * 0.46f
-                value.length == 3 -> SIZE * 0.52f
-                else -> SIZE * 0.64f
+                value.length >= 4 -> SIZE * 0.50f
+                value.length == 3 -> SIZE * 0.58f
+                value.length == 2 -> SIZE * 0.70f
+                else -> SIZE * 0.76f
             }
         }
 
-        // الوحدة تبقى كما هي
+        // ==========================================
+        // الوحدة الموجودة تحت الرقم
+        // ==========================================
         val unitPaint = Paint(
             Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG
         ).apply {
             color = Color.WHITE
+
             typeface = Typeface.create(
                 "sans-serif",
                 Typeface.BOLD
             )
+
             textAlign = Paint.Align.CENTER
-            textSize = SIZE * 0.24f
+
+            // حجم الوحدة حسب طلبك
+            textSize = SIZE * 0.54f
         }
 
-        // رفع الرقم قليلًا حتى نستطيع تكبيره رأسيًا
-        val numberY = SIZE * 0.55f
+        // ==========================================
+        // موضع الرقم
+        // ==========================================
+        // رفع الرقم قليلًا حتى لا يتداخل مع الوحدة
+        val numberY = SIZE * 0.48f
 
-        // الوحدة تبقى في الأسفل
-        val unitY = SIZE * 0.88f
+        // ==========================================
+        // موضع الوحدة
+        // ==========================================
+        val unitY = SIZE * 0.92f
 
+        // رسم الرقم
         canvas.drawText(
             value,
             SIZE / 2f,
@@ -85,6 +105,7 @@ object IconTextGenerator {
             numberPaint
         )
 
+        // رسم الوحدة
         canvas.drawText(
             unit,
             SIZE / 2f,
