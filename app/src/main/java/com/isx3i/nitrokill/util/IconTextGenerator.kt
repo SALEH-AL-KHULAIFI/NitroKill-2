@@ -11,7 +11,7 @@ import java.util.Locale
 object IconTextGenerator {
 
     // تكبير مساحة المؤشر قليلًا
-    private const val SIZE = 115
+    private const val SIZE = 105
 
     fun forSpeed(bytesPerSecond: Long): IconCompat {
         val (value, unit) = shortLabel(bytesPerSecond)
@@ -22,13 +22,13 @@ object IconTextGenerator {
         val kbps = bytesPerSecond / 1024.0
 
         return when {
-            kbps < 1.0 -> "0" to "KB/s"
+            kbps < 1.0 -> "0" to "K"
 
             kbps < 1000.0 ->
-                String.format(Locale.US, "%.0f", kbps) to "KB/s"
+                String.format(Locale.US, "%.0f", kbps) to "K"
 
             else ->
-                String.format(Locale.US, "%.1f", kbps / 1024.0) to "MB/s"
+                String.format(Locale.US, "%.1f", kbps / 1024.0) to "M"
         }
     }
 
@@ -82,8 +82,8 @@ object IconTextGenerator {
 
             textAlign = Paint.Align.CENTER
 
-            // حجم الوحدة — تصغير قليل
-            textSize = SIZE * 0.42f
+            // حجم الوحدة حسب طلبك
+            textSize = SIZE * 0.38f
         }
 
         // ==========================================
