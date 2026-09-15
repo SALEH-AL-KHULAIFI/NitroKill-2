@@ -22,13 +22,13 @@ object IconTextGenerator {
         val kbps = bytesPerSecond / 1024.0
 
         return when {
-            kbps < 1.0 -> "0" to "K"
+            kbps < 1.0 -> "0" to "KB/s"
 
             kbps < 1000.0 ->
-                String.format(Locale.US, "%.0f", kbps) to "K"
+                String.format(Locale.US, "%.0f", kbps) to "KB/s"
 
             else ->
-                String.format(Locale.US, "%.1f", kbps / 1024.0) to "M"
+                String.format(Locale.US, "%.1f", kbps / 1024.0) to "MB/s"
         }
     }
 
@@ -82,8 +82,8 @@ object IconTextGenerator {
 
             textAlign = Paint.Align.CENTER
 
-            // حجم الوحدة حسب طلبك
-            textSize = SIZE * 0.54f
+            // حجم الوحدة — تصغير قليل
+            textSize = SIZE * 0.42f
         }
 
         // ==========================================
